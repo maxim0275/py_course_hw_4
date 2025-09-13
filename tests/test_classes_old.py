@@ -17,8 +17,8 @@ def test_category_initialization():
 
     assert category.name == "Electronics"
     assert category.description == "Various electronic products"
-    assert len(category.products) == 1
-    assert product1.name in category.products[0]
+    assert len(category.products_list) == 1
+    assert product1.name in category.products_list[0]
 
 
 def test_category_count():
@@ -30,8 +30,7 @@ def test_category_count():
     category2 = Category("Category2", "Description2")
 
     # Проверка реализации строкового представления
-    product = Product("Example", "Description", 50.0, 5)
-    category1.products.append(product)  # добавляем продукт вручную
+    Product("Example", "Description", 50.0, 5)
     assert repr(category1) == "Category(name=Category1, products_count=0)"
     assert repr(category2) == "Category(name=Category2, products_count=0)"
 

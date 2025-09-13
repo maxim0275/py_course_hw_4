@@ -34,9 +34,9 @@ def test_load_data_from_json(mock_json_file):
     category = categories[0]
     assert category.name == "Телефоны"
     assert category.description == "Электронные устройства"
-    assert len(category.products) == 1
+    assert len(category.products_list) == 1
 
-    product = category.products[0]
+    product = category.products_list[0]
     assert "Xiaomi Mi 11" in product
     assert "45000.0" in product
     assert "10" in product
@@ -55,5 +55,5 @@ def test_category_initialization():
     category = Category(name="Test Category", description="Test Category Description", products=[product])
     assert category.name == "Test Category"
     assert category.description == "Test Category Description"
-    assert len(category.products) == 1
-    assert product.name in category.products[0]
+    assert len(category.products_list) == 1
+    assert product.name in category.products_list[0]
