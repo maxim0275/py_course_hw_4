@@ -2,7 +2,7 @@ from src.classes import Category, Product  # Замените your_module на �
 
 
 def test_product_initialization():
-    # Проверка корректности инициализации продукта
+    # Проверка  корректности инициализации продукта
     product = Product("Samsung Galaxy S23", "256GB, Серый", 150000.0, 10)
     assert product.name == "Samsung Galaxy S23"
     assert product.description == "256GB, Серый"
