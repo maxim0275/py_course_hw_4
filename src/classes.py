@@ -7,28 +7,28 @@ class Product:
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
         self.description = description
-        self._price = price  # Приватный атрибут для цены
+        self.__price = price  # Приватный атрибут для цены
         self.quantity = quantity
         self.instances.append(self)
 
     @property
     def price(self):
         """Геттер для цены"""
-        return self._price
+        return self.__price
 
     @price.setter
     def price(self, value: float):
         """Сеттер для цены с проверкой и подтверждением снижения цены"""
         if value <= 0:
             print("Цена не должна быть нулевая или отрицательная")
-        elif value < self._price:
+        elif value < self.__price:
             response = input("Цена снижена. Подтвердите изменение (y/n): ")
             if response.lower() == "y":
-                self._price = value
+                self.__price = value
             else:
                 print("Изменение цены отменено.")
         else:
-            self._price = value
+            self.__price = value
 
     @classmethod
     def new_product(cls, product_data: dict):
