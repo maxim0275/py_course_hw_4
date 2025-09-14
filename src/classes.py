@@ -45,9 +45,11 @@ class Product:
     def __repr__(self):
         return f"Product(name={self.name}, price={self.price}, quantity={self.quantity})"
 
+    # Задание 1
     def __str__(self):
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
+    # Задание 2
     def __add__(self, other):
         if not isinstance(other, Product):
             return NotImplemented
@@ -82,6 +84,34 @@ class Category:
     def __repr__(self):
         return f"Category(name={self.name}, products_count={len(self.__products)})"
 
+    # Задание 1
     def __str__(self):
         total_quantity = sum(product.quantity for product in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+    def __iter__(self):
+        return CategoryIterator(self)
+
+
+# * Дополнительное задание
+class CategoryIterator:
+    """Принимает объект категории в конструкторе. Инициализирует индекс,
+    который будет использоваться для отслеживания текущей позиции в списке товаров."""
+
+    def __init__(self, category):
+        self._category = category
+        self._index = 0
+
+    def __iter__(self):
+        """Возвращает сам объект итератора (в данном случае возвращает объект CategoryIterator)"""
+        return self
+
+    def __next__(self):
+        """Возвращает следующий товар в категории. Если товары закончились,
+        вызывает StopIteration для завершения итерации."""
+        if self._index < len(self._category.products_list):
+            product = self._category._Category__products[self._index]
+            self._index += 1
+            return product
+        else:
+            raise StopIteration

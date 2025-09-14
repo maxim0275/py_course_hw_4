@@ -1,8 +1,8 @@
 import unittest
-from unittest.mock import patch
 from io import StringIO
+from unittest.mock import patch
 
-from src.classes import Product, Category
+from src.classes import Category, Product
 
 
 class TestProduct(unittest.TestCase):
@@ -25,16 +25,16 @@ class TestProduct(unittest.TestCase):
         product = Product("Товар1", "Описание", 100.0, 10)
 
         # Check error for negative price
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+        with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
             product.price = -50.0
             self.assertIn("Цена не должна быть нулевая или отрицательная", mock_stdout.getvalue())
 
         # Test price confirmation
-        with patch('builtins.input', return_value='n'):
+        with patch("builtins.input", return_value="n"):
             product.price = 90.0
             self.assertEqual(product.price, 100.0)  # Price should remain unchanged
 
-        with patch('builtins.input', return_value='y'):
+        with patch("builtins.input", return_value="y"):
             product.price = 90.0
             self.assertEqual(product.price, 90.0)  # Price should be changed to 90.0
 
@@ -63,6 +63,7 @@ class TestProduct(unittest.TestCase):
 
 class TestCategory(unittest.TestCase):
     """setUp: Инициализация счетчиков категории и товаров."""
+
     def setUp(self):
         Category.product_count = 0
         Category.category_count = 0
@@ -91,5 +92,5 @@ class TestCategory(unittest.TestCase):
         self.assertEqual(repr(category), "Category(name=Категория 1, products_count=0)")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
