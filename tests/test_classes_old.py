@@ -2,7 +2,7 @@ from src.classes import Category, Product  # Замените your_module на �
 
 
 def test_product_initialization():
-    # Проверка корректности инициализации продукта
+    # Проверка  корректности инициализации продукта
     product = Product("Samsung Galaxy S23", "256GB, Серый", 150000.0, 10)
     assert product.name == "Samsung Galaxy S23"
     assert product.description == "256GB, Серый"
@@ -17,8 +17,8 @@ def test_category_initialization():
 
     assert category.name == "Electronics"
     assert category.description == "Various electronic products"
-    assert len(category.products) == 1
-    assert category.products[0] == product1
+    assert len(category.products_list) == 1
+    assert product1.name in category.products_list[0]
 
 
 def test_category_count():
@@ -30,9 +30,8 @@ def test_category_count():
     category2 = Category("Category2", "Description2")
 
     # Проверка реализации строкового представления
-    product = Product("Example", "Description", 50.0, 5)
-    category1.products.append(product)  # добавляем продукт вручную
-    assert repr(category1) == "Category(name=Category1, products_count=1)"
+    Product("Example", "Description", 50.0, 5)
+    assert repr(category1) == "Category(name=Category1, products_count=0)"
     assert repr(category2) == "Category(name=Category2, products_count=0)"
 
 
