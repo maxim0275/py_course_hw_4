@@ -1,13 +1,10 @@
 class Product:
     instances = []
-    """
-    Продукт
-    """
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
         self.description = description
-        self.__price = price  # Приватный атрибут для цены
+        self.__price = price
         self.quantity = quantity
         self.instances.append(self)
 
@@ -48,11 +45,18 @@ class Product:
     def __repr__(self):
         return f"Product(name={self.name}, price={self.price}, quantity={self.quantity})"
 
+    def __str__(self):
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+
+    def __add__(self, other):
+        if not isinstance(other, Product):
+            return NotImplemented
+        return self.price * self.quantity + other.price * other.quantity
+
 
 class Category:
     product_count = 0
     category_count = 0
-    """Категория"""
 
     def __init__(self, name: str, description: str, products=None):
         self.name = name
@@ -67,20 +71,17 @@ class Category:
 
     @property
     def products(self):
-        """Геттер, возвращающий список товаров"""
-        # return list(
-        #     [f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products]
-        # )
-        return "\n".join(
-            [f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products]
-        )
+        """Геттер, возвращающий строковое представление списка товаров"""
+        return "\n".join(str(product) for product in self.__products)
 
     @property
     def products_list(self):
         """Геттер, возвращающий список товаров"""
-        return list(
-            [f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products]
-        )
+        return [str(product) for product in self.__products]
 
     def __repr__(self):
         return f"Category(name={self.name}, products_count={len(self.__products)})"
+
+    def __str__(self):
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
