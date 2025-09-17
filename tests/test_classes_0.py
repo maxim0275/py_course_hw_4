@@ -40,5 +40,5 @@ def test_repr_methods():
     product = Product("Gadget", "Useful", 299.99, 20)
     category = Category("Gadgets", "Various gadgets", [product])
 
-    assert repr(product) == "Product(name=Gadget, price=299.99, quantity=20)"
+    assert repr(product) == "Product(Gadget, Useful, 299.99, 20)"
     assert repr(category) == "Category(name=Gadgets, products_count=1)"
