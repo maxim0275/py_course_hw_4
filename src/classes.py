@@ -53,6 +53,8 @@ class Product:
     def __add__(self, other):
         if not isinstance(other, Product):
             return NotImplemented
+        if type(self) is not type(other):
+            raise TypeError(f"Нельзя сложить {type(self).__name__} и {type(other).__name__}")
         return self.price * self.quantity + other.price * other.quantity
 
 
@@ -67,7 +69,10 @@ class Category:
         Category.category_count += 1
         Category.product_count += len(self.__products)
 
-    def add_product(self, new_product: Product):
+    def add_product(self, new_product):
+        if not isinstance(new_product, Product):
+            raise TypeError("Можно добавлять только объекты Product или его подклассов.")
+
         self.__products.append(new_product)
         Category.product_count += 1
 
@@ -115,3 +120,77 @@ class CategoryIterator:
             return product
         else:
             raise StopIteration
+
+
+# ==================== подклассы
+
+
+class Smartphone(Product):
+    """Подкласс Смартфон"""
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: str,
+        model: str,
+        memory: str,
+        color: str,
+    ):
+        """Новый конструктор"""
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+    def __repr__(self):
+        """Изменить представление для отладки"""
+        return (
+            f"Smartphone(name={self.name}, model={self.model}, price={self.price}, "
+            f"quantity={self.quantity}, efficiency={self.efficiency}, memory={self.memory}, color={self.color})"
+        )
+
+    def __str__(self):
+        """Изменить представление для пользователя"""
+        return (
+            f"{self.name} (модель {self.model}), {self.price} руб. "
+            f"Остаток: {self.quantity} шт., цвет: {self.color}, "
+            f"производительность: {self.efficiency}, память: {self.memory}"
+        )
+
+
+class LawnGrass(Product):
+    """Подскласс трава газонная"""
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str,
+    ):
+        """Новый конструктор"""
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color
+
+    def __repr__(self):
+        """Изменить представление для отладки"""
+        return (
+            f"LawnGrass(name={self.name}, country={self.country}, price={self.price}, "
+            f"quantity={self.quantity}, germination_period={self.germination_period}, color={self.color})"
+        )
+
+    def __str__(self):
+        """Изменить представление для пользователя"""
+        return (
+            f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт., "
+            f"страна-производитель: {self.country}, срок прорастания: {self.germination_period}, цвет: {self.color}"
+        )
