@@ -1,4 +1,9 @@
-class Product:
+from src.base_order_category import Base_Ord_Cat
+from src.base_product import BaseProduct
+from src.mixin_print import MixinPrint
+
+
+class Product(MixinPrint, BaseProduct):
     instances = []
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
@@ -7,6 +12,7 @@ class Product:
         self.__price = price
         self.quantity = quantity
         self.instances.append(self)
+        super().__init__()
 
     @property
     def price(self):
@@ -42,14 +48,9 @@ class Product:
             quantity=product_data.get("quantity", 0),
         )
 
-    def __repr__(self):
-        return f"Product(name={self.name}, price={self.price}, quantity={self.quantity})"
-
-    # Задание 1
     def __str__(self):
-        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+        return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
 
-    # Задание 2
     def __add__(self, other):
         if not isinstance(other, Product):
             return NotImplemented
@@ -89,7 +90,6 @@ class Category:
     def __repr__(self):
         return f"Category(name={self.name}, products_count={len(self.__products)})"
 
-    # Задание 1
     def __str__(self):
         total_quantity = sum(product.quantity for product in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
@@ -140,11 +140,11 @@ class Smartphone(Product):
         color: str,
     ):
         """Новый конструктор"""
-        super().__init__(name, description, price, quantity)
         self.efficiency = efficiency
         self.model = model
         self.memory = memory
         self.color = color
+        super().__init__(name, description, price, quantity)
 
     def __repr__(self):
         """Изменить представление для отладки"""
@@ -176,10 +176,11 @@ class LawnGrass(Product):
         color: str,
     ):
         """Новый конструктор"""
-        super().__init__(name, description, price, quantity)
+
         self.country = country
         self.germination_period = germination_period
         self.color = color
+        super().__init__(name, description, price, quantity)
 
     def __repr__(self):
         """Изменить представление для отладки"""
@@ -193,4 +194,31 @@ class LawnGrass(Product):
         return (
             f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт., "
             f"страна-производитель: {self.country}, срок прорастания: {self.germination_period}, цвет: {self.color}"
+        )
+
+
+class Order(Base_Ord_Cat):
+    """Класс Заказ"""
+
+    def __init__(self, name: str, description, product: Product, quantity: int):
+        super().__init__()
+        self.name = name
+        self.description = description
+        self.product = product
+        self.quantity = quantity
+
+    @property
+    def total_cost(self):
+        """Стоимость заказа"""
+        return self.quantity * self.product.price
+
+    @property
+    def products(self):
+        return self.product
+
+    def __repr__(self):
+        return (
+            f" Имя заказа: {self.name}, Описание заказа: {self.description}, "
+            f"Продукт: {self.product}, Количество: {self.quantity}, "
+            f"Цена: {self.product.price}, Стоимость:{self.total_cost}"
         )

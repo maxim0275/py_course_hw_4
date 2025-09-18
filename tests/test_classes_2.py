@@ -58,7 +58,7 @@ class TestProduct(unittest.TestCase):
     def test_product_str_repr(self):
         product = Product("Товар1", "Описание", 100.0, 10)
         self.assertEqual(str(product), "Товар1, 100.0 руб. Остаток: 10 шт.")
-        self.assertEqual(repr(product), "Product(name=Товар1, price=100.0, quantity=10)")
+        self.assertEqual(repr(product), "Product(Товар1, Описание, 100.0, 10)")
 
 
 class TestCategory(unittest.TestCase):
