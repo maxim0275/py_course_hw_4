@@ -1,5 +1,6 @@
 from src.base_order_category import Base_Ord_Cat
 from src.base_product import BaseProduct
+from src.except_co import ExceptBo
 from src.mixin_print import MixinPrint
 
 
@@ -10,7 +11,10 @@ class Product(MixinPrint, BaseProduct):
         self.name = name
         self.description = description
         self.__price = price
-        self.quantity = quantity
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+        else:
+            self.quantity = quantity
         self.instances.append(self)
         super().__init__()
 
@@ -62,6 +66,7 @@ class Product(MixinPrint, BaseProduct):
 class Category:
     product_count = 0
     category_count = 0
+    instances = []
 
     def __init__(self, name: str, description: str, products=None):
         self.name = name
@@ -69,13 +74,33 @@ class Category:
         self.__products = products if products else []
         Category.category_count += 1
         Category.product_count += len(self.__products)
+        self.instances.append(self)
 
     def add_product(self, new_product):
         if not isinstance(new_product, Product):
             raise TypeError("Можно добавлять только объекты Product или его подклассов.")
 
+        try:
+            test_zero = ExceptBo()
+            test_zero.test_add_product(new_product.quantity)
+        except ValueError:
+            print("Добавляется товар с нулевым количеством")
+        finally:
+            print("Обработка добавления товара завершена")
+
         self.__products.append(new_product)
         Category.product_count += 1
+
+    def middle_price(self):
+        total_price = 0
+        count = 0
+
+        for product in Product.instances:
+            if product in self.__products:
+                total_price += product.price
+                count += 1
+
+        return total_price / count if count > 0 else 0
 
     @property
     def products(self):
@@ -200,12 +225,21 @@ class LawnGrass(Product):
 class Order(Base_Ord_Cat):
     """Класс Заказ"""
 
+    quantity: int
+
     def __init__(self, name: str, description, product: Product, quantity: int):
         super().__init__()
         self.name = name
         self.description = description
         self.product = product
-        self.quantity = quantity
+        try:
+            test_zero = ExceptBo()
+            test_zero.test_add_product(quantity)
+        except ValueError:
+            print("Добавляется товар с нулевым количеством")
+        finally:
+            self.quantity = quantity
+            print("Обработка добавления товара завершена")
 
     @property
     def total_cost(self):
