@@ -4,6 +4,8 @@ from . import views
 app_name = 'MailingApp'
 
 urlpatterns = [
+    path('', views.MainPageView.as_view(), name='main_page'),
+
     path('recipient/list/', views.MailRecipientListView.as_view(), name='recipient_list'),
     path('recipient/create/', views.MailRecipientCreateView.as_view(), name='recipient_create'),
     path('recipient/detail/<int:pk>/', views.MailRecipientDetailView.as_view(), name='recipient_detail'),

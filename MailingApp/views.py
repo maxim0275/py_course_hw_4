@@ -1,9 +1,30 @@
+import datetime
+
+from django.core.mail import send_mail
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
 
-from MailingApp.models import MailRecipient, Message, MailManage
+from MailingApp.forms import MailManageForm
+from MailingApp.models import MailRecipient, Message, MailManage, MailAtt
+
+
+class MainPageView(TemplateView):
+    template_name = 'MailingApp/main_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["mail_manage_count"] = MailManage.objects.all().count()
+        context["recipient_count"] = MailRecipient.objects.all().count()
+
+        active_mmail = MailManage.objects.filter(date_first_send__lte= datetime.datetime.today().date())
+        active_mmail = active_mmail.filter(date_last_send__gte=datetime.datetime.today().date())
+        active_mmail = active_mmail.filter(status="STARTED")
+        context["active_mail_manage_count"] = active_mmail.count()
+
+        return context
 
 
 # ============================ MailRecipient ===================================
@@ -98,7 +119,8 @@ class MailManageDetailView(DetailView):
 
 class MailManageUpdateView(UpdateView):
     model = MailManage
-    fields = ['recipient', 'message', 'status', 'date_first_send', 'date_last_send']
+    form_class = MailManageForm
+    # fields = ['recipient', 'message', 'status', 'date_first_send', 'date_last_send']
     template_name = 'MailingApp/mmail_form.html'
     success_url = reverse_lazy('MailingApp:mmail_list')
 
@@ -125,10 +147,27 @@ class MailManageTODOView(View):
 
         # Получить объект рассылки
         mmail = get_object_or_404(MailManage, id=mailmanage_id)
-        print(mmail)
-        print(mmail.date_first_send)
-        print(mmail.date_last_send)
-        #
 
+        if mmail.date_first_send < datetime.datetime.today().date() < mmail.date_last_send:
+            # Выполнить рассылку
+            for client in mmail.recipient.all():
+                print(client)
+                result_sendmail = send_mail(mmail.message.topic, mmail.message.body, 'your_email@email.com',
+                                            [client.email], fail_silently=True)
+                # Записать информацию о попытке
+                mail_send_attempt = MailAtt()
+                if result_sendmail:
+                    # успех
+                    result = "SUCC"
+                else:
+                    # не успех
+                    result = "FAIL"
+                mail_send_attempt.date_time_att = datetime.datetime.today().date()
+                mail_send_attempt.status = result
+                mail_send_attempt.server_answer = result_sendmail
+                mail_send_attempt.mailing = mmail
+                mail_send_attempt.save()
+        else:
+            return HttpResponseForbidden("Период рассылки не разрешен!")
 
         return redirect('MailingApp:mmail_list')

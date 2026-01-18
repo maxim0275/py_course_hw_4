@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -16,7 +15,6 @@ SECRET_KEY = "django-insecure-+7cj^0t#d^q_t9d)n4@$7cx_5gcojb1lo7uiierse!rf9(u-mw
 DEBUG = True if os.getenv('DEBUG') == "True" else False
 
 ALLOWED_HOSTS = ['local', '127.0.0.1']
-
 
 # Application definition
 
@@ -59,7 +57,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -74,7 +71,6 @@ DATABASES = {
         'PORT': os.getenv('DATABASE_PORT', default='5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -94,7 +90,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -106,8 +101,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

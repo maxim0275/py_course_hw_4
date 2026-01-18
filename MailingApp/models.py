@@ -62,7 +62,7 @@ class MailAtt(models.Model):
 
     date_time_att = models.DateField(verbose_name='Дата и время попытки отправки', null=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='CREATED', verbose_name='Статус')
-    server_answer = models.TextField(verbose_name="Тело письма", null=False)
+    server_answer = models.TextField(verbose_name="Ответ почтового сервера", null=False)
     mailing = models.ForeignKey(MailManage, on_delete=models.PROTECT, related_name='mail_att')
 
     def __str__(self):
