@@ -37,17 +37,39 @@ class MailManage(models.Model):
         ('ENDED', 'Завершена')
     ]
 
-    date_first_send = models.DateField(verbose_name='Дата и время пераой отправки', null=False, auto_now_add=True)
-    date_last_send = models.DateField(verbose_name='Дата и время окончания отправки', null=False, auto_now_add=True)
+    date_first_send = models.DateField(verbose_name='Дата и время первой отправки', null=False)
+    date_last_send = models.DateField(verbose_name='Дата и время окончания отправки', null=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='CREATED', verbose_name='Статус')
     message = models.ForeignKey(Message, on_delete=models.PROTECT, related_name='mailing_manage')
     recipient = models.ManyToManyField(MailRecipient)
 
     def __str__(self):
-        return str(self.message) + ', ' + str(self.recipient)
+        recipients = ', '.join([str(recipient) for recipient in self.recipient.all()])
+        return str(self.message) + ', ' + recipients
 
     class Meta:
         verbose_name = 'Пользователи_и_рассылки'
         verbose_name_plural = 'Пользователи_и_рассылки'
         ordering = ['message']
         db_table = 'mail_manage'
+
+
+class MailAtt(models.Model):
+    STATUS_CHOICES = [
+        ('SUCC', 'Создана'),
+        ('FAIL', 'Запущена')
+    ]
+
+    date_time_att = models.DateField(verbose_name='Дата и время попытки отправки', null=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='CREATED', verbose_name='Статус')
+    server_answer = models.TextField(verbose_name="Тело письма", null=False)
+    mailing = models.ForeignKey(MailManage, on_delete=models.PROTECT, related_name='mail_att')
+
+    def __str__(self):
+        return str(self.mailing) + ', ' + str(self.date_time_att)
+
+    class Meta:
+        verbose_name = 'Попытка_рассылки'
+        verbose_name_plural = 'Попытки_рассылки'
+        ordering = ['date_time_att']
+        db_table = 'mail_att'

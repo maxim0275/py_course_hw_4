@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="{% static 'js/color-modes.js' %}"></script>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <title>Title</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4"> Управление рассылками  </h1>
+        <a href="{% url 'MailingApp:mmail_create' %}" class="btn btn-primary"> Создать </a>
+        <ul class="List-group">
+            {% for mmail in mmails %}
+            <li class="List-group-item">
+                <a href="{% url 'MailingApp:mmail_detail' mmail.pk %}"> {{ mmail }}</a>
+                <a href="{% url 'MailingApp:mmail_update' mmail.pk %}" class="btn btn-sm btn-secondary"> Редактировать </a>
+
+                <form action="{% url 'MailingApp:mmail_todo' mailmanage_id=mmail.pk %}" method="post" style="display: inline; margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-secondary ">Отправка сообщений</button>
+                </form>
+
+                <a href="{% url 'MailingApp:mmail_delete' mmail.pk %}" class="btn btn-sm btn-danger"> Удалить </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

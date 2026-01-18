@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Блог </title>
+    <script src="{% static 'js/color-modes.js' %}"></script>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4"> Рассылка {{ mmail }} </h1>
+        <p> Сообщение: {{ mmail.message }}</p>
+        <ul>
+            {% for recipient in mmail.recipient.all %}
+                <li>{{ recipient }}</li>
+            {% endfor %}
+        </ul>
+        <p> Дата первой отправки: {{ mmail.date_first_send }}</p>
+        <p> Дата и время окончания отправки: {{ mmail.date_last_send }}</p>
+        <p> Статус: {{ mmail.status }}</p>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

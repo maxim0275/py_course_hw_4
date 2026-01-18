@@ -9,14 +9,16 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="mb-4"> Сообщение </h1>
+        <h1 class="mb-4"> Удалить ? </h1>
+        <p> Вы уверены, что хотите удалить рассылку ?</p>
         <form method="post">
             {% csrf_token%}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary"> Сохранить </button>
-            <a href="{% url 'MailingApp:recipient_list' %}"> Отменить </a>
+            <button type="submit" class="btn btn-danger"> Удалить </button>
+            <a href="{% url 'MailingApp:mmail_list' %}"> Отменить </a>
         </form>
     </div>
+
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

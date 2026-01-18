@@ -1,9 +1,12 @@
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
-from MailingApp.models import MailRecipient, Message
+from MailingApp.models import MailRecipient, Message, MailManage
 
 
+# ============================ MailRecipient ===================================
 class MailRecipientListView(ListView):
     model = MailRecipient
     template_name = 'MailingApp/recipient_list.html'
@@ -38,7 +41,7 @@ class MailRecipientDeleteView(DeleteView):
     success_url = reverse_lazy('MailingApp:recipient_list')
 
 
-# ===============================================================
+# ============================ Message ===================================
 class MessageListView(ListView):
     model = Message
     template_name = 'MailingApp/message_list.html'
@@ -70,3 +73,62 @@ class MessageDeleteView(DeleteView):
     model = Message
     template_name = 'MailingApp/message_confirm_delete.html'
     success_url = reverse_lazy('MailingApp:message_list')
+
+
+# ======================= MailManage ==========================================
+class MailManageListView(ListView):
+    model = MailManage
+    template_name = 'MailingApp/mmail_list.html'
+    context_object_name = 'mmails'
+
+
+class MailManageCreateView(CreateView):
+    model = MailManage
+    fields = ['recipient', 'message', 'status', 'date_first_send', 'date_last_send']
+    template_name = 'MailingApp/mmail_form.html'
+    context_object_name = 'mmail'
+    success_url = reverse_lazy('MailingApp:mmail_list')
+
+
+class MailManageDetailView(DetailView):
+    model = MailManage
+    template_name = 'MailingApp/mmail_detail.html'
+    context_object_name = 'mmail'
+
+
+class MailManageUpdateView(UpdateView):
+    model = MailManage
+    fields = ['recipient', 'message', 'status', 'date_first_send', 'date_last_send']
+    template_name = 'MailingApp/mmail_form.html'
+    success_url = reverse_lazy('MailingApp:mmail_list')
+
+
+class MailManageDeleteView(DeleteView):
+    model = MailManage
+    template_name = 'MailingApp/mmail_confirm_delete.html'
+    success_url = reverse_lazy('MailingApp:mmail_list')
+
+    # def form_valid(self, form):
+    #     # Очистите связи ManyToMany перед удалением объекта
+    #     print("Before clear:", self.object.recipient.all())
+    #     self.object.recipient.clear()
+    #     print("After clear:", self.object.recipient.all())
+    #
+    #     # Продолжайте удаление объекта
+    #     return super().form_valid(form)
+
+
+class MailManageTODOView(View):
+
+    def post(self, request, mailmanage_id):
+        # Если время рассылки находится между start_time и end_time, то отправка разрешена, иначе выводится сообщение об ошибке
+
+        # Получить объект рассылки
+        mmail = get_object_or_404(MailManage, id=mailmanage_id)
+        print(mmail)
+        print(mmail.date_first_send)
+        print(mmail.date_last_send)
+        #
+
+
+        return redirect('MailingApp:mmail_list')
